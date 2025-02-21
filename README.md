@@ -26,7 +26,8 @@
 
 当前版本界面如下：
 
-![image-20250222010851697](C:\Users\a\AppData\Roaming\Typora\typora-user-images\image-20250222010851697.png)
+![image-20250222010851697](
+images/image-20250222010851697.png)
 
 该界面表示正在打开消息框，请耐心等待
 
