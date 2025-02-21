@@ -2,7 +2,7 @@
 
 这是作者的写的约等于第一个项目，劳烦各位海涵
 
-本项目基于wxauto的基础版本进行开发，以下是wxauto的链接https://docs.wxauto.org/也请大家多多支持！
+本项目基于wxauto的基础版本进行开发，以下是wxauto的链接https://docs.wxauto.org/ 也请大家多多支持！
 
 有不到位的地方还请各位指正！
 
