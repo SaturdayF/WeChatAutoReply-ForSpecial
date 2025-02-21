@@ -1,0 +1,8 @@
+uiautomation
+Pillow~=11.1.0
+pywin32~=308
+psutil~=6.1.1
+pyperclip~=1.9.0
+pyqt
+playsound~=1.3.0
+comtypes~=1.4.9
