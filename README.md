@@ -33,11 +33,11 @@ images/image-20250222010851697.png)
 
 但是这一步实测会非常慢，大概3-10分钟，因此最快的方式是启动前提前打开聊天窗口（把这个聊天窗口独立出来）
 
-![image-20250222011740159](C:\Users\a\AppData\Roaming\Typora\typora-user-images\image-20250222011740159.png)
+![image-20250222011740159](images\image-20250222011740159.png)
 
 显示加载完毕即开始监听
 
-![image-20250222011923536](C:\Users\a\AppData\Roaming\Typora\typora-user-images\image-20250222011923536.png)
+![image-20250222011923536](images\image-20250222011923536.png)
 
 对方（被监听的人）发送@help可以查看目前支持的指令
 
