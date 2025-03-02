@@ -4,7 +4,8 @@ from wxauto import WeChat
 from core.MessageStrategyFactory import MessageStrategyFactory
 
 
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QMutex, QMutexLocker
+
 
 class WorkerThread(QThread):
     # 定义信号用于与主线程通信
@@ -15,14 +16,15 @@ class WorkerThread(QThread):
     def __init__(self, automation):
         super().__init__()
         self.automation = automation
-        self.is_running = False
+        self._is_running = False  # 使用线程安全的标志
+        self._mutex = QMutex()
 
     def run(self):
         """线程核心执行逻辑"""
-        self.is_running = True
-        self.automation.my_wx.is_running = True  # 同步控制标志
+        with QMutexLocker(self._mutex):
+            self._is_running = True
         try:
-            while self.is_running and self.automation.my_wx.is_running:
+            while self.is_running:
                 result = self.automation.perform_task()
                 self.status_updated.emit(result)
         except Exception as e:
@@ -31,9 +33,14 @@ class WorkerThread(QThread):
             self.finished.emit()
 
     def stop(self):
-        self.is_running = False
-        self.automation.my_wx.is_running = False  # 同步停止
-        self.wait()
+        with QMutexLocker(self._mutex):
+            self._is_running = False
+        self.wait(1000)  # 等待线程退出
+
+    @property
+    def is_running(self):
+        with QMutexLocker(self._mutex):
+            return self._is_running
 
 
 class WeChatAutomation:
@@ -49,7 +56,7 @@ class WeChatAutomation:
         """启动线程"""
         if not self.is_running:
             self.thread = WorkerThread(self)
-            self.thread.start()
+            self.thread.start()  # 启动线程
 
     def stop(self):
         if self.is_running:
@@ -63,8 +70,20 @@ class Mywxauto:
     def __init__(self):
         self.wx = None
         self.chat = None
-        self.is_running = False
+        self._mutex = QMutex()
+        self._is_running = False  # 私有变量
+        # self.is_running = False
         self.strategy = MessageStrategyFactory()
+
+    @property
+    def is_running(self):
+        with QMutexLocker(self._mutex):
+            return self._is_running
+
+    @is_running.setter
+    def is_running(self, value):
+        with QMutexLocker(self._mutex):
+            self._is_running = value
 
     def get_list(self,value):
         return self.strategy.get_strategy(value).printlist()
@@ -121,12 +140,11 @@ class Mywxauto:
         # 初始化
         self.is_running = True
         self.wx = WeChat()
-        wx = self.wx
 
         # 开始加载监听窗口
         print('监听窗口加载中……')
         for i in self.get_list('listening'):
-            wx.AddListenChat(who=i, savepic=False)
+            self.wx.AddListenChat(who=i, savepic=False)
         print('监听窗口加载完毕！')
 
         # 此处应改为可控制的中断式循环
@@ -145,6 +163,13 @@ class Mywxauto:
             except Exception as e:
                 print(f"Error: {str(e)}")
             time.sleep(1)
+
+    def stop(self):
+        self.is_running = False
+        if self.wx:
+            # 假设 wxauto 有释放资源的方法
+            self.wx.close()  # 或 self.wx.cleanup()
+            self.wx = None
 
 # if __name__ == "__main__":
 #     wxx = WeChatAutomation()

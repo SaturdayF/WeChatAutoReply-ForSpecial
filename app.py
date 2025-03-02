@@ -31,11 +31,12 @@ class Application:
     def start_automation(self):
         """启动自动化任务"""
         if not self.automation.is_running:
-            self.automation.start()  # 启动线程
-            # 创建线程后连接信号
-            self.automation.thread.status_updated.connect(self.ui.update_status)
-            self.automation.thread.error_occurred.connect(self.show_error)
-            self.automation.thread.finished.connect(self.on_automation_finished)
+            self.automation.start()
+            # 从 automation 获取线程对象并连接信号
+            thread = self.automation.thread
+            thread.status_updated.connect(self.ui.update_status)
+            thread.error_occurred.connect(self.show_error)
+            thread.finished.connect(self.on_automation_finished)
 
     def stop_automation(self):
         """停止自动化任务"""
