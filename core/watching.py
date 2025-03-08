@@ -42,6 +42,7 @@ class WatchingMessageStrategy:
         screenshot = ImageGrab.grab()
         # 保存图片
         save_path = os.path.join('screenshot', self.gettime() + '.png')
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         screenshot.save(save_path)
         print(f"截图已保存到: {save_path}")
         # 获取绝对路径

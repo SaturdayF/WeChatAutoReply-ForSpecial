@@ -743,7 +743,13 @@ class WeChat(WeChatBase):
 
             NewFriendsWnd.ButtonControl(Name='确定').Click(simulateMove=False)
         return True
-    
+
+    def get_chat(self,who):
+        """ Saturday_write
+            获取who的chat对象
+        """
+        return self.listen[who]
+
 class WeChatFiles:
     def __init__(self, language='cn') -> None:
         self.language = language

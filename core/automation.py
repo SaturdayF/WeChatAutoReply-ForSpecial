@@ -145,6 +145,8 @@ class Mywxauto:
         print('监听窗口加载中……')
         for i in self.get_list('listening'):
             self.wx.AddListenChat(who=i, savepic=False)
+            self.chat = self.wx.get_chat(i)
+            self.chat.SendMsg("程序已开始运行！")
         print('监听窗口加载完毕！')
 
         # 此处应改为可控制的中断式循环
